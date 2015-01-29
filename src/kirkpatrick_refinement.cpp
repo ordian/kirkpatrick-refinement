@@ -201,6 +201,11 @@ namespace geom
         return search_dag_.vertices.size();
       }
 
+      size_t kirkpatrick_refinement::simple_triangles_num() const
+      {
+        return points_.size() - 5;
+      }
+
       kirkpatrick_refinement::id_type
       kirkpatrick_refinement::add_triangle(triangle_type<id_type> const & t,
                                            std::vector<set_type> & triangles)

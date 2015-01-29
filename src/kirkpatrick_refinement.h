@@ -33,6 +33,7 @@ namespace geom
         bool is_leaf(id_type) const;
 
         size_t triangles_num() const;
+        size_t simple_triangles_num() const;
 
         triangle_type<point_type> triangle_by_id(id_type id) const;
 

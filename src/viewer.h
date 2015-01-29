@@ -57,7 +57,7 @@ namespace visualization {
         drawer.set_color(Qt::white);
         draw(drawer, kre.triangle_by_id(0));
         drawer.set_color(Qt::blue);
-        for (size_t i = 1; i < kre.points().size() - 4; ++i)
+        for (size_t i = 1; i <= kre.simple_triangles_num(); ++i)
             draw(drawer, kre.triangle_by_id(i));
     }
 }
@@ -90,10 +90,10 @@ void kirkpatrick_refinement_viewer::draw(drawer_type & drawer) const
         visualization::draw(drawer, *kre_);
         if (answer_ != 0)
         {
+            drawer.set_color(Qt::red);
+            drawer.draw_point(query_, 5);
             if (kre_->is_leaf(answer_))
                 drawer.set_color(Qt::green);
-            else
-                drawer.set_color(Qt::red);
             visualization::draw(drawer, kre_->triangle_by_id(answer_));
         }
     }
@@ -105,6 +105,8 @@ void kirkpatrick_refinement_viewer::print(printer_type & printer) const
     {
         printer.corner_stream() << "Triangle id: "
                                 <<  answer_ << endl;
+        if (1 <= answer_ && answer_ <= kre_->simple_triangles_num())
+            printer.corner_stream() << "inside" << endl;
         for (size_t i = 1; i < pts_.size() - 1; ++i)
         {
             auto t = kre_->triangle_by_id(i);
@@ -133,6 +135,12 @@ bool kirkpatrick_refinement_viewer::on_key(int key)
 {
     switch (key)
     {
+    case Qt::Key_F:
+        if (kre_)
+        {
+            answer_ = kre_->find_query(query_);
+            return true;
+        }
     case Qt::Key_Space:
         if (kre_)
         {
@@ -151,9 +159,9 @@ bool kirkpatrick_refinement_viewer::on_key(int key)
     case Qt::Key_S:
         {
             std::string filename = QFileDialog::getSaveFileName(
-                get_wnd(),
-                "Save Points"
-            ).toStdString();
+                                                                get_wnd(),
+                                                                "Save Points"
+                                                                ).toStdString();
             if (filename != "")
             {
                 std::ofstream out(filename.c_str());
@@ -165,9 +173,9 @@ bool kirkpatrick_refinement_viewer::on_key(int key)
     case Qt::Key_L:
         {
             std::string filename = QFileDialog::getOpenFileName(
-                get_wnd(),
-                "Load Points"
-            ).toStdString();
+                                                                get_wnd(),
+                                                                "Load Points"
+                                                                ).toStdString();
             if (filename != "")
             {
                 std::ifstream in(filename.c_str());
@@ -177,8 +185,8 @@ bool kirkpatrick_refinement_viewer::on_key(int key)
                 answer_ = 0;
                 return true;
             }
-        }
-    }
+        }}
+
     return false;
 }
 
