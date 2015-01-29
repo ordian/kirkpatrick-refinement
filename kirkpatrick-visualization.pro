@@ -6,7 +6,7 @@ QT += opengl
 
 OBJECTS_DIR = bin
 
-QMAKE_CXXFLAGS = -std=c++11 -Wall -pedantic -Werror
+QMAKE_CXXFLAGS = -std=c++11 -Wall -pedantic -Werror -Ofast
 
 macx {
     QMAKE_CXXFLAGS += -stdlib=libc++
@@ -28,14 +28,15 @@ INCLUDEPATH += src \
 HEADERS += src/stdafx.h \
            src/viewer.h \
            src/determinant.h \
+           src/circular.h \
            src/graph.h \
-           src/homogeneous.h \
+           src/common.h \
            src/triangle.h \
            src/kirkpatrick_refinement.h \
 
 SOURCES += src/main.cpp \
            src/kirkpatrick_refinement.cpp \
            src/triangle.cpp \
-           src/io.cpp \
+           src/turn.cpp \
 
 LIBS += -Lvisualization -lvisualization

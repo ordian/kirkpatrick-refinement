@@ -12,7 +12,6 @@
 using namespace visualization;
 using geom::structures::point_type;
 using geom::structures::contour_type;
-using geom::structures::homogeneous_point_type;
 using geom::structures::triangle_type;
 using geom::algorithms::localization::kirkpatrick_refinement;
 
@@ -25,12 +24,6 @@ namespace structures {
 
     struct contour_builder_type
     {
-        void add_point(homogeneous_point_type const & pt)
-        {
-            if (pt.omega != 0)
-                pts_.push_back(pt);
-        }
-
         void add_point(point_type const & pt)
         {
             pts_.push_back(pt);
@@ -50,7 +43,7 @@ using geom::structures::contour_builder_type;
 
 namespace visualization {
 
-    void draw(drawer_type & drawer, triangle_type<homogeneous_point_type> const & t)
+    void draw(drawer_type & drawer, triangle_type<point_type> const & t)
     {
         contour_builder_type builder;
         builder.add_point(t.a);
@@ -61,9 +54,11 @@ namespace visualization {
 
     void draw(drawer_type & drawer, kirkpatrick_refinement const & kre)
     {
-        for (size_t i = 1; i < kre.triangles_num(); ++i)
-            if (kre.is_leaf(i))
-                draw(drawer, kre.triangle_by_id(i));
+        drawer.set_color(Qt::white);
+        draw(drawer, kre.triangle_by_id(0));
+        drawer.set_color(Qt::blue);
+        for (size_t i = 1; i < kre.points().size() - 4; ++i)
+            draw(drawer, kre.triangle_by_id(i));
     }
 }
 
@@ -92,7 +87,6 @@ void kirkpatrick_refinement_viewer::draw(drawer_type & drawer) const
 
     if (kre_)
     {
-        drawer.set_color(Qt::gray);
         visualization::draw(drawer, *kre_);
         if (answer_ != 0)
         {

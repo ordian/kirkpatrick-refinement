@@ -3,7 +3,6 @@
 
 #include "graph.h"
 #include "triangle.h"
-#include "homogeneous.h"
 #include "geom/primitives/contour.h"
 
 #include <set>
@@ -11,19 +10,21 @@
 #include <deque>
 #include <functional>
 
-namespace geom {
-namespace algorithms {
-namespace localization {
+namespace geom
+{
+  namespace algorithms
+  {
+    namespace localization
+    {
+      using geom::structures::point_type;
+      using geom::structures::contour_type;
+      using geom::structures::graph_type;
+      using geom::structures::triangle_type;
 
-    using geom::structures::point_type;
-    using geom::structures::homogeneous_point_type;
-    using geom::structures::contour_type;
-    using geom::structures::graph_type;
-    using geom::structures::triangle_type;
-
-    struct kirkpatrick_refinement {
+      struct kirkpatrick_refinement
+      {
         typedef uint32_t id_type;
-        const size_t DEGREE_THRESHOLD = 9;
+        const size_t DEGREE_THRESHOLD = 12;
 
         kirkpatrick_refinement(std::vector<point_type> const & poly);
 
@@ -33,24 +34,26 @@ namespace localization {
 
         size_t triangles_num() const;
 
-        triangle_type<homogeneous_point_type> triangle_by_id(id_type id) const;
+        triangle_type<point_type> triangle_by_id(id_type id) const;
 
-        std::vector<homogeneous_point_type> const & points() const {
-            return points_;
+        std::vector<point_type> const & points() const
+        {
+          return points_;
         }
 
-        graph_type<triangle_type<id_type>> const & search_dag() const {
-            return search_dag_;
+        graph_type<triangle_type<id_type>> const & search_dag() const
+        {
+          return search_dag_;
         };
 
-    private:
-        std::vector<homogeneous_point_type> points_;
+      private:
+        std::vector<point_type> points_;
         graph_type<triangle_type<id_type>> search_dag_;
 
-    private:
+      private:
         typedef std::set<id_type> set_type;
 
-        id_type add_triangle(triangle_type<id_type> & t,
+        id_type add_triangle(triangle_type<id_type> const & t,
                              std::vector<set_type> & triangles);
 
         bool is_ear(id_type id1, id_type id2, id_type id3,
@@ -64,8 +67,10 @@ namespace localization {
         std::vector<id_type>
         find_independent_set(std::deque<id_type> & from,
                              std::vector<set_type> const & triangles) const;
-    };
+      };
 
-}}}
+    }
+  }
+}
 
 #endif // _KIRKPATRICK_REFINEMENT_H
