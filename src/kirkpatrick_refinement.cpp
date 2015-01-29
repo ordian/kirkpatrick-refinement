@@ -238,8 +238,7 @@ namespace geom
       {
         // ear clipping
         std::vector<triangle_type<id_type>> result;
-        if (poly.size() < 3)
-          return result;
+        assert(poly.size() >= 3);
         std::list<id_type> dcvl(poly.begin(), poly.end());
         std::list<id_type>::iterator v = dcvl.begin();
         std::advance(v, rand() % dcvl.size());
