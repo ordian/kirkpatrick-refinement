@@ -166,8 +166,13 @@ namespace geom
       kirkpatrick_refinement::find_query(point_type const & point) const
       {
         id_type id = 0;
-        while (!is_leaf(id))
-          id = find_step(point, id);
+        id_type old_id = 1;
+        while (id != old_id)
+          {
+            old_id = id;
+            id = find_step(point, id);
+          }
+
         return id;
       }
 
