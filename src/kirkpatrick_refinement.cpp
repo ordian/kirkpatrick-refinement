@@ -102,11 +102,15 @@ namespace geom
                 // sort triangles
                 std::sort(points.begin(), points.end(), [&](id_type l, id_type r)
                           {
-                            double angleL = std::atan2(points_[l].y - points_[j].y,
-                                                       points_[l].x - points_[j].x);
-                            double angleR = std::atan2(points_[r].y - points_[j].y,
-                                                       points_[r].x - points_[j].x);
-                            return angleL < angleR;
+                            auto a = points_[l] - points_[j];
+                            auto b = points_[r] - points_[j];
+
+                            if (a.x >= 0 && b.x < 0)
+                              return true;
+                            if (a.x < 0 && b.x >= 0)
+                              return false;
+
+                            return (a ^ b) > 0;
                           });
                 // memorize degrees
                 std::vector<size_t> neighbours_degrees(points.size());
